@@ -1,5 +1,5 @@
 # PasswordWifiSender
-This PowerShell script retrieves saved Wi-Fi networks and their passwords, formats the information, and sends it to a specified Discord webhook. It uses `netsh` commands to extract profiles and passwords, formats the results, and posts them as a message to Discord.
+This PowerShell script is your ultimate tool for uncovering saved Wi-Fi networks and their passwords on a Windows machine. With just a few clicks, it scans, extracts, and formats the credentials of all stored Wi-Fi profiles. The gathered information is then seamlessly sent to a specified Discord channel via a webhook, making it perfect for keeping track of your network connections or recovering forgotten passwords.
 
 
 PasswordWifiSender is a PowerShell script that retrieves the saved Wi-Fi profiles and their passwords from a Windows machine and sends them to a specified Discord channel via a webhook.  
